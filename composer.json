@@ -1,5 +1,5 @@
 {
-  "name": "xddesigeners/silverstripe-events",
+  "name": "xddesigners/silverstripe-events",
   "description": "Simple events calendar module for SilverStripe",
   "type": "silverstripe-vendormodule",
   "keywords": ["silverstripe", "event", "calendar"],
