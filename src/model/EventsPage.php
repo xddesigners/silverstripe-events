@@ -33,7 +33,7 @@ class EventsPage extends Page
 
     private static $description = 'Add events to your website.';
 
-    private static $icon = 'xddesigners/events:client/images/calendar.svg';
+    private static $icon = 'xddesigners/silverstripe-events:client/images/calendar.svg';
 
     public function getSettingsFields()
     {
