@@ -1,0 +1,13 @@
+---
+Name: nl.yml
+---
+XD\Events:
+  ReadMore: 'Lees meer'
+XD\Events\Model\EventsPage:
+  EventsPerPage: 'Evenementen per pagina'
+XD\Events\Model\EventPage:
+  FeaturedImage: 'Uitgeligte afbeelding'
+  DateTimesDescription: 'Een evenement kan op meerdere data plaatsvinden.'
+  NoUpcomingDates: 'Geen toekomstige data'
+XD\Events\Model\EventDateTime:
+  StartDateError: 'Er moet minstens een start datum gezet zijn'

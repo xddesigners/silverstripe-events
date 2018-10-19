@@ -1,0 +1,6 @@
+---
+Name: events
+---
+XD\Events\Model\EventsPage:
+  extensions:
+    - XD\Events\Model\EventsLumberjack
