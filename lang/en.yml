@@ -1,13 +1,11 @@
----
-Name: en.yml
----
-XD\Events:
-  ReadMore: 'Read more'
-XD\Events\Model\EventsPage:
-  EventsPerPage: 'Events per page'
-XD\Events\Model\EventPage:
-  FeaturedImage: 'Featured Image'
-  DateTimesDescription: 'You can add multiple dates for a event.'
-  NoUpcomingDates: 'No upcoming dates'
-XD\Events\Model\EventDateTime:
-  StartDateError: 'You need to set a start date'
+en:
+  XD\Events:
+    ReadMore: 'Read more'
+  XD\Events\Model\EventsPage:
+    EventsPerPage: 'Events per page'
+  XD\Events\Model\EventPage:
+    FeaturedImage: 'Featured Image'
+    DateTimesDescription: 'You can add multiple dates for a event.'
+    NoUpcomingDates: 'No upcoming dates'
+  XD\Events\Model\EventDateTime:
+    StartDateError: 'You need to set a start date'
