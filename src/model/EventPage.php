@@ -84,11 +84,8 @@ class EventPage extends Page
         $uploadField = UploadField::create('FeaturedImage', _t(__CLASS__ . '.FeaturedImage', 'Featured Image'));
         $uploadField->getValidator()->setAllowedExtensions(['jpg', 'jpeg', 'png', 'gif']);
 
-        $fields->addFieldsToTab('Root.Main', [
-            $uploadField,
-            $summaryHolder
-        ]);
-
+        $fields->insertBefore('Metadata', $uploadField );
+        $fields->insertBefore('Metadata', $summaryHolder );
 
         $fields->addFieldsToTab('Root.Date', [
             GridField::create('DateTimes', 'DateTimes', $this->DateTimes()->sort('StartDate DESC'), EventDateTimeGridField::create())
