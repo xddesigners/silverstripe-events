@@ -1,11 +1,31 @@
 nl:
   XD\Events:
     ReadMore: 'Lees meer'
-  XD\Events\Model\EventsPage:
-    EventsPerPage: 'Evenementen per pagina'
-  XD\Events\Model\EventPage:
-    FeaturedImage: 'Uitgeligte afbeelding'
-    DateTimesDescription: 'Een evenement kan op meerdere data plaatsvinden.'
-    NoUpcomingDates: 'Geen toekomstige data'
   XD\Events\Model\EventDateTime:
+    PLURALNAME: 'Event Date Times'
+    PLURALS:
+      one: 'An Event Date Time'
+      other: '{count} Event Date Times'
+    SINGULARNAME: 'Event Date Time'
     StartDateError: 'Er moet minstens een start datum gezet zijn'
+  XD\Events\Model\EventPage:
+    CustomSummary: 'Add A Custom Summary'
+    DateTimesDescription: 'Een evenement kan op meerdere data plaatsvinden.'
+    FeaturedImage: 'Uitgeligte afbeelding'
+    NoUpcomingDates: 'Geen toekomstige data'
+    PLURALNAME: 'Event Pages'
+    PLURALS:
+      one: 'An Event Page'
+      other: '{count} Event Pages'
+    SINGULARNAME: 'Event Page'
+    SummaryDescription: 'If no summary is specified the first 30 words will be used.'
+  XD\Events\Model\EventsLumberjack:
+    TabTitle: Events
+  XD\Events\Model\EventsPage:
+    DESCRIPTION: 'Add events to your website.'
+    EventsPerPage: 'Evenementen per pagina'
+    PLURALNAME: 'Events Pages'
+    PLURALS:
+      one: 'An Events Page'
+      other: '{count} Events Pages'
+    SINGULARNAME: 'Events Page'
