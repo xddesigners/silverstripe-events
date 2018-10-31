@@ -2,8 +2,8 @@
 
 namespace XD\Events\Model;
 
-use SilverStripe\Blog\Model\BlogFilter\BlogFilterGridField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Lumberjack\Model\Lumberjack;
 
@@ -20,7 +20,7 @@ class EventsLumberjack extends Lumberjack
             'ParentID' => $this->owner->ID
         ]);
 
-        $gridField = BlogFilterGridField::create(
+        $gridField = GridField::create(
             'ChildPages',
             $this->getLumberjackTitle(),
             $pages,
