@@ -16,7 +16,7 @@ class EventPageController extends PageController
     ];
 
     private static $url_handlers = [
-        '$Action/$ID/$StartDate/$EndDate' => 'date'
+        'date/$ID/$StartDate/$EndDate' => 'date'
     ];
 
     /**
