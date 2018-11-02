@@ -30,6 +30,8 @@ class EventPage extends Page
         'Summary' => 'HTMLText'
     ];
 
+    private static $default_sort = "Created DESC";
+
     private static $has_one = [
         'FeaturedImage' => Image::class
     ];
