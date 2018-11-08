@@ -68,7 +68,6 @@ class EventPage extends Page
 
     public function getCMSFields()
     {
-
         $this->beforeUpdateCMSFields(function ($fields) {
 
             $summary = HtmlEditorField::create('Summary', false);
