@@ -68,33 +68,36 @@ class EventPage extends Page
 
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
-        $summary = HtmlEditorField::create('Summary', false);
-        $summary->setRows(5);
-        $summary->setDescription(_t(
-            __CLASS__ . '.SummaryDescription',
-            'If no summary is specified the first 30 words will be used.'
-        ));
+        $this->beforeUpdateCMSFields(function ($fields) {
 
-        $summaryHolder = ToggleCompositeField::create(
-            'CustomSummary',
-            _t(__CLASS__ . '.CustomSummary', 'Add A Custom Summary'), [
-                $summary
-            ]
-        )->setHeadingLevel(4)->addExtraClass('custom-summary');
+            $summary = HtmlEditorField::create('Summary', false);
+            $summary->setRows(5);
+            $summary->setDescription(_t(
+                __CLASS__ . '.SummaryDescription',
+                'If no summary is specified the first 30 words will be used.'
+            ));
 
-        $uploadField = UploadField::create('FeaturedImage', _t(__CLASS__ . '.FeaturedImage', 'Featured Image'));
-        $uploadField->getValidator()->setAllowedExtensions(['jpg', 'jpeg', 'png', 'gif']);
+            $summaryHolder = ToggleCompositeField::create(
+                'CustomSummary',
+                _t(__CLASS__ . '.CustomSummary', 'Add A Custom Summary'), [
+                    $summary
+                ]
+            )->setHeadingLevel(4)->addExtraClass('custom-summary');
 
-        $fields->insertBefore('Metadata', $uploadField );
-        $fields->insertBefore('Metadata', $summaryHolder );
+            $uploadField = UploadField::create('FeaturedImage', _t(__CLASS__ . '.FeaturedImage', 'Featured Image'));
+            $uploadField->getValidator()->setAllowedExtensions(['jpg', 'jpeg', 'png', 'gif']);
 
-        $fields->addFieldsToTab('Root.Date', [
-            GridField::create('DateTimes', 'DateTimes', $this->DateTimes()->sort('StartDate DESC'), EventDateTimeGridField::create())
-                ->setDescription(_t(__CLASS__ . '.DateTimesDescription', 'You can add multiple dates for a event.'))
-        ]);
+            $fields->insertBefore('Metadata', $uploadField );
+            $fields->insertBefore('Metadata', $summaryHolder );
 
-        return $fields;
+            $fields->addFieldsToTab('Root.Date', [
+                GridField::create('DateTimes', 'DateTimes', $this->DateTimes()->sort('StartDate DESC'), EventDateTimeGridField::create())
+                    ->setDescription(_t(__CLASS__ . '.DateTimesDescription', 'You can add multiple dates for a event.'))
+            ]);
+
+        });
+
+        return parent::getCMSFields();
     }
 
     /**
