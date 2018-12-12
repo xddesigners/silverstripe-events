@@ -11,7 +11,7 @@ nl:
   XD\Events\Model\EventPage:
     CustomSummary: 'Add A Custom Summary'
     DateTimesDescription: 'Een evenement kan op meerdere data plaatsvinden.'
-    FeaturedImage: 'Uitgeligte afbeelding'
+    FeaturedImage: 'Prominente afbeelding'
     NoUpcomingDates: 'Geen toekomstige data'
     PLURALNAME: 'Event Pages'
     PLURALS:
