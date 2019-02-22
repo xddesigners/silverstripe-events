@@ -105,7 +105,6 @@ class EventPage extends Page
      */
     public function onBeforeArchive()
     {
-        parent::onBeforeArchive();
         $this->DateTimes()->removeAll();
     }
 
