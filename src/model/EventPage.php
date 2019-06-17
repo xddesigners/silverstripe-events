@@ -101,14 +101,6 @@ class EventPage extends Page
     }
 
     /**
-     * Remove all date times if the page is deleted
-     */
-    public function onBeforeArchive()
-    {
-        $this->DateTimes()->removeAll();
-    }
-
-    /**
      * Get the upcoming date
      * Used in the grid field summary
      *
