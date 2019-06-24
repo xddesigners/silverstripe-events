@@ -51,11 +51,12 @@ class EventPage extends Page
 
     private static $summary_fields = [
         'Title',
-        'UpcomingStartDate' => 'Upcoming date'
+        'StartDate' => 'Date'
     ];
 
     private static $casting = [
-        'UpcomingStartDate' => 'DBDatetime'
+        'UpcomingStartDate' => 'DBDatetime',
+        'StartDate' => 'DBDatetime',
     ];
 
     private static $can_be_root = false;
@@ -121,5 +122,14 @@ class EventPage extends Page
         }
 
         return _t(__CLASS__ . '.NoUpcomingDates', 'No upcoming dates');
+    }
+
+    public function getStartDate()
+    {
+        if ($recentDate = $this->DateTimes()->first()) {
+            return $recentDate->dbObject('StartDate');
+        }
+
+        return _t(__CLASS__ . '.NoStartDates', 'No start date');
     }
 }
