@@ -39,7 +39,7 @@ class EventDateTime extends DataObject
         'AllDay' => 'Boolean'
     ];
 
-    private static $default_sort = 'StartDate ASC, EndDate ASC';
+    private static $default_sort = 'StartDate ASC, StartTime ASC, EndDate ASC';
 
     private static $has_one = [
         'Event' => EventPage::class
