@@ -53,11 +53,12 @@ class EventsPage extends Page
      */
     public function getUpcomingEvents()
     {
+        $now = DBDatetime::now()->getValue();
         $joinTable = Versioned::get_stage() === Versioned::LIVE ? 'EventPage_Live' : 'EventPage';
-        $events = EventDateTime::get()->filter([
-            'StartDate:GreaterThanOrEqual' => DBDatetime::now()->getValue(),
-            'Event.ParentID' => $this->ID
-        ])->innerJoin($joinTable, "\"$joinTable\".\"ID\" = \"EventDateTime\".\"EventID\"");
+        $events = EventDateTime::get()
+            ->filter(['Event.ParentID' => $this->ID,])
+            ->where("(\"PinnedForever\" = 1) OR (\"StartDate\" >= '$now') OR (\"StartDate\" <= '$now' AND \"EndDate\" >= '$now')")
+            ->innerJoin($joinTable, "\"$joinTable\".\"ID\" = \"EventDateTime\".\"EventID\"");
 
         $this->extend('updateEvents', $events);
 

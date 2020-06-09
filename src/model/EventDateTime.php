@@ -36,10 +36,12 @@ class EventDateTime extends DataObject
         'EndDate' => 'Date',
         'StartTime' => 'Time',
         'EndTime' => 'Time',
-        'AllDay' => 'Boolean'
+        'AllDay' => 'Boolean',
+        'Pinned' => 'Boolean',
+        'PinnedForever' => 'Boolean'
     ];
 
-    private static $default_sort = 'StartDate ASC, StartTime ASC, EndDate ASC';
+    private static $default_sort = 'Pinned DESC, PinnedForever DESC, StartDate ASC, StartTime ASC, EndDate ASC';
 
     private static $has_one = [
         'Event' => EventPage::class
@@ -50,7 +52,9 @@ class EventDateTime extends DataObject
         'EndDate',
         'StartTime',
         'EndTime',
-        'AllDay'
+        'AllDay',
+        'Pinned',
+        'PinnedForever' => 'Forever',
     ];
 
     public function getCMSFields()
@@ -61,7 +65,9 @@ class EventDateTime extends DataObject
             DateField::create('EndDate'),
             TimeField::create('StartTime'),
             TimeField::create('EndTime'),
-            CheckboxField::create('AllDay')
+            CheckboxField::create('AllDay'),
+            CheckboxField::create('Pinned'),
+            CheckboxField::create('PinnedForever'),
         ]);
 
         return $fields;
