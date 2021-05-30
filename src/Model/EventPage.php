@@ -7,6 +7,7 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
@@ -91,9 +92,10 @@ class EventPage extends Page
             $fields->insertBefore('Metadata', $uploadField );
             $fields->insertBefore('Metadata', $summaryHolder );
 
+            $dateTimesDescription = _t(__CLASS__ . '.DateTimesDescription', 'You can add multiple dates for a event.');
             $fields->addFieldsToTab('Root.Date', [
-                GridField::create('DateTimes', 'DateTimes', $this->DateTimes()->sort('StartDate DESC'), EventDateTimeGridField::create())
-                    ->setDescription(_t(__CLASS__ . '.DateTimesDescription', 'You can add multiple dates for a event.'))
+                GridField::create('DateTimes', 'DateTimes', $this->DateTimes()->sort('StartDate DESC'), EventDateTimeGridField::create()),
+                LiteralField::create('DateTimesDescription', "<p class='description'>{$dateTimesDescription}</p>")
             ]);
 
         });
