@@ -34,7 +34,7 @@
 
         <% if $NotLastPage %>
             <li class="pagination__item pagination__item--link pagination__item--next">
-                <a href="{$BaseHref}{$NextLink}" class="pagination__arrow pagination__arrow--right button small white">
+                <a href="{$NextLink}" class="pagination__arrow pagination__arrow--right button small white">
                     <i class="fas fa-angle-right"></i>
                 </a>
             </li>
