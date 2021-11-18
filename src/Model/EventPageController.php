@@ -26,8 +26,12 @@ class EventPageController extends PageController
     {
         if ($date = DataObject::get_by_id(EventDateTime::class, $this->getRequest()->param('ID'))) {
             return $date;
+        } elseif ($date = $this->data()->getUpcomingDate()) {
+            return $date;
         } else {
-            return $this->data()->getUpcomingDate();
+            return EventDateTime::get()->filter([
+                'EventID' => $this->ID,
+            ])->first();
         }
     }
 }
