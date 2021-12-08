@@ -59,18 +59,18 @@ class EventDateTime extends DataObject
 
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
-        $fields->addFieldsToTab('Root.Main', [
-            DateField::create('StartDate'),
-            DateField::create('EndDate'),
-            TimeField::create('StartTime'),
-            TimeField::create('EndTime'),
-            CheckboxField::create('AllDay'),
-            CheckboxField::create('Pinned'),
-            CheckboxField::create('PinnedForever'),
-        ]);
-
-        return $fields;
+        $this->beforeUpdateCMSFields(function ($fields) {
+            $fields->addFieldsToTab('Root.Main', [
+                DateField::create('StartDate'),
+                DateField::create('EndDate'),
+                TimeField::create('StartTime'),
+                TimeField::create('EndTime'),
+                CheckboxField::create('AllDay'),
+                CheckboxField::create('Pinned'),
+                CheckboxField::create('PinnedForever'),
+            ]);
+        });
+        return parent::getCMSFields();
     }
 
     public function validate()
