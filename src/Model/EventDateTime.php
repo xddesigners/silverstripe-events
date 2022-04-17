@@ -83,13 +83,24 @@ class EventDateTime extends DataObject
         return $result;
     }
 
+    public function getTitle()
+    {
+        if ($this->EndDate) {
+            $startDate = $this->dbObject('StartDate')->Format('d MMM');
+            $endDate = $this->dbObject('EndDate')->Nice();
+            return "{$startDate} — {$endDate}";
+        } else {
+            return $this->dbObject('StartDate')->Nice();
+        }
+    }
+
     public function Link()
     {
         return Controller::join_links(
             $this->Event()->Link('date'),
             $this->ID,
             $this->dbObject('StartDate')->URLDate(),
-            $this->dbObject('EndDate')->URLDate()
+            $this->dbObject('EndDate')->URLDate(),
         );
     }
 
