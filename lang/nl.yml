@@ -29,3 +29,13 @@ nl:
       one: 'An Events Page'
       other: '{count} Events Pages'
     SINGULARNAME: 'Events Page'
+  XD\Events\Reports:
+    DefinedPeriod: 'Periode'
+    Day: 'Vandaag'
+    Week: 'Deze week'
+    Month: 'Deze maand'
+    Year: 'Dit jaar'
+    Other: 'Aangepaste periode'  
+    FilterPeriod: 'Filter op periode'
+    CustomPeriodFrom: 'Vanaf datum'
+    CustomPeriodTill: 'Tot datum'
