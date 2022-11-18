@@ -53,7 +53,7 @@ class EventsPage extends Page
      */
     public function getUpcomingEvents()
     {
-        $now = DBDatetime::now()->getValue();
+        $now = date('Y-m-d');
         $joinTable = Versioned::get_stage() === Versioned::LIVE ? 'EventPage_Live' : 'EventPage';
         $events = EventDateTime::get()
             ->filter(['Event.ParentID' => $this->ID,])
