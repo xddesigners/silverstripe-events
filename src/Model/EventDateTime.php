@@ -8,6 +8,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TimeField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDate;
@@ -37,14 +38,39 @@ class EventDateTime extends DataObject
         'StartTime' => 'Time',
         'EndTime' => 'Time',
         'AllDay' => 'Boolean',
-        'Pinned' => 'Boolean',
-        'PinnedForever' => 'Boolean'
+        'Pinned' => 'Boolean'
     ];
 
-    private static $default_sort = 'Pinned DESC, PinnedForever DESC, StartDate ASC, StartTime ASC, EndDate ASC';
+    private static $default_sort = 'Pinned DESC, StartDate ASC, StartTime ASC, EndDate ASC';
 
     private static $has_one = [
         'Event' => EventPage::class
+    ];
+
+    private static $searchable_fields = [
+        'Event.Title' => [
+            'title' => 'Event',
+            'field' => TextField::class,
+            'filter' => 'PartialMatchFilter',
+        ],
+        'DateAfter' => [
+            'title' => 'Datum na',
+            'field' => DateField::class,
+            'filter' => 'GreaterThanOrEqualFilter',
+            'match_any' => [
+                'StartDate',
+                'EndDate'
+            ]
+        ],
+        'DateBefore' => [
+            'title' => 'Datum voor',
+            'field' => DateField::class,
+            'filter' => 'LessThanOrEqualFilter',
+            'match_any' => [
+                'Startdatum',
+                'EndDate'
+            ]
+        ]
     ];
 
     private static $summary_fields = [
@@ -54,7 +80,6 @@ class EventDateTime extends DataObject
         'EndTime',
         'AllDay',
         'Pinned',
-        'PinnedForever' => 'Forever',
     ];
 
     public function getCMSFields()
@@ -66,10 +91,10 @@ class EventDateTime extends DataObject
                 TimeField::create('StartTime'),
                 TimeField::create('EndTime'),
                 CheckboxField::create('AllDay'),
-                CheckboxField::create('Pinned'),
-                CheckboxField::create('PinnedForever'),
+                CheckboxField::create('Pinned')
             ]);
         });
+
         return parent::getCMSFields();
     }
 
@@ -85,12 +110,17 @@ class EventDateTime extends DataObject
 
     public function getTitle()
     {
+        $eventTitle = '';
+        if ($event = $this->Event()) {
+            $eventTitle = $event->getTitle();
+        }
+        
         if ($this->EndDate) {
             $startDate = $this->dbObject('StartDate')->Format('d MMM');
             $endDate = $this->dbObject('EndDate')->Nice();
-            return "{$startDate} — {$endDate}";
+            return "{$eventTitle}, {$startDate} — {$endDate}";
         } else {
-            return $this->dbObject('StartDate')->Nice();
+            return "{$eventTitle}, {$this->dbObject('StartDate')->Nice()}";
         }
     }
 
