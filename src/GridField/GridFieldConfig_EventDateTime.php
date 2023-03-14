@@ -1,6 +1,6 @@
 <?php
 
-namespace XD\Events\Form;
+namespace XD\Events\GridField;
 
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig;
@@ -15,7 +15,7 @@ use Symbiote\GridFieldExtensions\GridFieldTitleHeader;
  *
  * @author Bram de Leeuw
  */
-class EventDateTimeGridField extends GridFieldConfig
+class GridFieldConfig_EventDateTime extends GridFieldConfig
 {
     public function __construct($itemsPerPage = null)
     {
@@ -24,7 +24,15 @@ class EventDateTimeGridField extends GridFieldConfig
         $this->addComponent(new GridFieldTitleHeader());
         $this->addComponent(new GridFieldEditableColumns());
         $this->addComponent(new GridFieldAddNewInlineButton("buttons-before-left"));
-        $this->addComponent(new GridFieldDeleteAction());
-//        $this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
+        $this->addComponent(new GridFieldTitleHeader());
+
+        $this->removeComponentsByType([
+            GridField_ActionMenu::class,
+            GridFieldFilterHeader::class,
+            GridFieldSortableHeader::class,
+            GridFieldPageCount::class,
+            GridFieldPaginator::class,
+            GridFieldDeleteAction::class
+        ]);
     }
 }

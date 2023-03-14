@@ -11,7 +11,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
-use XD\Events\Form\EventDateTimeGridField;
+use XD\Events\GridField\GridFieldConfig_EventDateTime;
 
 /**
  * Class EventPage
@@ -94,7 +94,7 @@ class EventPage extends Page
 
             $dateTimesDescription = _t(__CLASS__ . '.DateTimesDescription', 'You can add multiple dates for a event.');
             $fields->addFieldsToTab('Root.Date', [
-                GridField::create('DateTimes', 'DateTimes', $this->DateTimes()->sort('StartDate DESC'), EventDateTimeGridField::create()),
+                GridField::create('DateTimes', 'DateTimes', $this->DateTimes()->sort('StartDate DESC'), GridFieldConfig_EventDateTime::create()),
                 LiteralField::create('DateTimesDescription', "<p class='description'>{$dateTimesDescription}</p>")
             ]);
 

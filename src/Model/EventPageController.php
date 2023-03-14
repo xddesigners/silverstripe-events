@@ -3,6 +3,8 @@
 namespace XD\Events\Model;
 
 use PageController;
+use SilverStripe\Assets\FileNameFilter;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -12,7 +14,8 @@ use SilverStripe\ORM\DataObject;
 class EventPageController extends PageController
 {
     private static $allowed_actions = [
-        'date'
+        'date',
+        'ics'
     ];
 
     private static $url_handlers = [
@@ -33,5 +36,26 @@ class EventPageController extends PageController
                 'EventID' => $this->ID,
             ])->first();
         }
+    }
+
+
+    public function ics(HTTPRequest $request)
+    {
+        if (!($id = $request->param('ID'))) {
+            return $this->httpError(404, 'not found');
+        }
+            
+        if (!($date = DataObject::get_by_id(EventDateTime::class, $id))) {
+            return $this->httpError(404, 'not found');
+        }
+        
+        $filter = FileNameFilter::create();
+        $fileName = $filter->filter($date->getTitle());
+        $data = $date->ics();
+        header("Content-type:text/calendar");
+        header('Content-Disposition: attachment; filename="' . $fileName . '.ics"');
+        Header('Content-Length: ' . strlen($data));
+        Header('Connection: close');
+        echo $data;
     }
 }

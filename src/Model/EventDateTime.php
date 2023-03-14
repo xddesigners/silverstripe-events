@@ -2,17 +2,18 @@
 
 namespace XD\Events\Model;
 
+use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\TimeField;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use XD\Events\GridField\GridFieldConfig_EventDayDateTimes;
+use XD\Events\Model\EventDayDateTime;
 
 /**
  * Class EventDateTime
@@ -37,7 +38,6 @@ class EventDateTime extends DataObject
         'EndDate' => 'Date',
         'StartTime' => 'Time',
         'EndTime' => 'Time',
-        'AllDay' => 'Boolean',
         'Pinned' => 'Boolean'
     ];
 
@@ -45,6 +45,10 @@ class EventDateTime extends DataObject
 
     private static $has_one = [
         'Event' => EventPage::class
+    ];
+
+    private static $has_many = [
+        'DayDateTimes' => EventDayDateTime::class
     ];
 
     private static $searchable_fields = [
@@ -78,7 +82,6 @@ class EventDateTime extends DataObject
         'EndDate',
         'StartTime',
         'EndTime',
-        'AllDay',
         'Pinned',
     ];
 
@@ -86,16 +89,36 @@ class EventDateTime extends DataObject
     {
         $this->beforeUpdateCMSFields(function ($fields) {
             $fields->addFieldsToTab('Root.Main', [
-                DateField::create('StartDate'),
-                DateField::create('EndDate'),
-                TimeField::create('StartTime'),
-                TimeField::create('EndTime'),
-                CheckboxField::create('AllDay'),
-                CheckboxField::create('Pinned')
+                CheckboxField::create('Pinned', _t(__CLASS__ . '.Pinned', 'Pinned'))
             ]);
+
+            if ($this->exists()) {
+                $fields->addFieldToTab('Root.Main', GridField::create(
+                    'DayDateTimes',
+                    _t(__CLASS__ . '.DayDateTimes', 'Days'),
+                    $this->DayDateTimes(),
+                    GridFieldConfig_EventDayDateTimes::create()
+                ));
+            }
         });
 
-        return parent::getCMSFields();
+        $fields = parent::getCMSFields();
+        $fields->removeByName(['StartDate', 'EndDate', 'StartTime', 'EndTime']);
+        return $fields;
+    }
+
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        // force change to trigger onAfterWrite()
+        $this->LastEdited = DBDatetime::now()->Rfc2822();
+        $this->syncDayDateTimesToDateTime();
+    }
+
+    public function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        $this->syncDateTimeToDayDateTimes();
     }
 
     public function validate()
@@ -106,6 +129,33 @@ class EventDateTime extends DataObject
         }
 
         return $result;
+    }
+
+    public function getStartDatetime() : DBDatetime
+    {
+        return $this->dateTimeFromParts([
+            $this->StartDate,
+            $this->StartTime,
+        ]);
+    }
+
+    public function getEndDatetime() : DBDatetime
+    {
+        return $this->dateTimeFromParts([
+            $this->EndDate,
+            $this->EndTime,
+        ]);
+    }
+
+    protected function dateTimeFromParts(array $parts) : DBDatetime
+    {
+        $dateTime = DBDatetime::create();
+        $dateTimeStr = trim(implode(' ', $parts));
+        if ($dateTimeStr) {
+            $dateTime->setValue($dateTimeStr);
+        }
+
+        return $dateTime;
     }
 
     public function getTitle()
@@ -137,5 +187,47 @@ class EventDateTime extends DataObject
     public function AbsoluteLink()
     {
         return Director::absoluteURL($this->Link());
+    }
+
+    public function ics()
+    {   
+        return $this->renderWith(__CLASS__ . '_ics', [
+            'ICSStartDate' => gmdate("Ymd\THis\Z", $this->getStartDatetime()->Time()),
+            'ICSEndDate' => gmdate("Ymd\THis\Z", $this->getEndDatetime()->Time()),
+            'ICSTimeStamp' => gmdate("Ymd\THis\Z"),
+        ]);
+    }
+
+    protected function syncDayDateTimesToDateTime()
+    {
+        $days = $this->DayDateTimes();
+        if ($days->exists()) {
+            $firstDate = $days->first();
+            if ($firstDate && $firstDate->StartDate) {
+                $this->StartDate = $firstDate->StartDate;
+                $this->StartTime = $firstDate->StartTime;
+                $this->EndTime = $firstDate->EndTime;
+            }
+
+            $lastDate = $days->last();
+            if ($lastDate && $firstDate->ID !== $lastDate->ID) {
+                $this->EndDate = $lastDate->StartTime;
+                $this->EndTime = $lastDate->EndTime;
+            }
+        }
+    }
+
+    protected function syncDateTimeToDayDateTimes()
+    {
+        $days = $this->DayDateTimes();
+        // auto create first day
+        if (!$days->exists() && $this->StartDate) {
+            EventDayDateTime::create([
+                'EventDateTimeID' => $this->ID,
+                'StartDate' => $this->StartDate,
+                'StartTime' => $this->StartTime,
+                'EndTime' => $this->EndTime
+            ])->write();
+        }
     }
 }
