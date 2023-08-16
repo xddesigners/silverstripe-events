@@ -61,16 +61,16 @@ class GuestListReport extends Report
 
         // start date end date
         if ($from) {
-            $events = $events->where("(\"PinnedForever\" = 1) OR (\"StartDate\" >= '$from') OR (\"StartDate\" <= '$from' AND \"EndDate\" >= '$from')");
+            $events = $events->where("(\"StartDate\" >= '$from') OR (\"StartDate\" <= '$from' AND \"EndDate\" >= '$from')");
         }
 
         if ($till) {
-            $events = $events->where("(\"PinnedForever\" = 1) OR (\"StartDate\" <= '$till')");
+            $events = $events->where("(\"StartDate\" <= '$till')");
         }
 
         if (!$from && !$till) {
             $now = DBDatetime::now()->getValue();
-            $events = $events->where("(\"PinnedForever\" = 1) OR (\"StartDate\" >= '$now') OR (\"StartDate\" <= '$now' AND \"EndDate\" >= '$now')");
+            $events = $events->where("(\"StartDate\" >= '$now') OR (\"StartDate\" <= '$now' AND \"EndDate\" >= '$now')");
         }
 
         if ($sort) {
