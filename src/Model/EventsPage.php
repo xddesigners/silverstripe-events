@@ -57,7 +57,7 @@ class EventsPage extends Page
         $joinTable = Versioned::get_stage() === Versioned::LIVE ? 'EventPage_Live' : 'EventPage';
         $events = EventDateTime::get()
             ->filter(['Event.ParentID' => $this->ID,])
-            ->where("(\"PinnedForever\" = 1) OR (\"StartDate\" >= '$now') OR (\"StartDate\" <= '$now' AND \"EndDate\" >= '$now')")
+            ->where("(\"StartDate\" >= '$now') OR (\"StartDate\" <= '$now' AND \"EndDate\" >= '$now')")
             ->innerJoin($joinTable, "\"$joinTable\".\"ID\" = \"EventDateTime\".\"EventID\"");
 
         $this->extend('updateEvents', $events);
