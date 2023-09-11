@@ -3,7 +3,9 @@
 namespace XD\Events\Model;
 
 use PageController;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\DataObject;
+use XD\Events\Extensions\HasICSFeed;
 
 /**
  * Class EventPageController
@@ -12,11 +14,15 @@ use SilverStripe\ORM\DataObject;
 class EventPageController extends PageController
 {
     private static $allowed_actions = [
-        'date'
+        'date',
     ];
 
     private static $url_handlers = [
         'date/$ID/$StartDate/$EndDate' => 'date'
+    ];
+
+    private static $extensions = [
+        HasICSFeed::class
     ];
 
     /**

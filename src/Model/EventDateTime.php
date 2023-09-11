@@ -138,4 +138,29 @@ class EventDateTime extends DataObject
     {
         return Director::absoluteURL($this->Link());
     }
+
+    public function getStartDateTime()
+    {
+        $startDate = $this->dbObject('StartDate')->getValue();
+        $startTime = $this->dbObject('StartTime')->getValue();
+        return DBDatetime::create()->setValue(trim("{$startDate} {$startTime}"));
+    }
+
+    public function getEndDateTime()
+    {
+        $endDate = $this->dbObject('EndDate')->getValue();
+        $endTime = $this->dbObject('EndTime')->getValue();
+        if (!$endDate) {
+            $endDate = $this->dbObject('StartDate')->getValue();
+            if ($endTime < $this->dbObject('StartTime')->getValue()) {
+                $endDate = date('Y-m-d', strtotime($endDate . ' +1 day'));
+            }
+        }
+        return DBDatetime::create()->setValue(trim("{$endDate} {$endTime}"));
+    }
+
+    public function getTimeZone()
+    {
+        return date_default_timezone_get();
+    }
 }

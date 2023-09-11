@@ -4,6 +4,7 @@ namespace XD\Events\Model;
 
 use PageController;
 use SilverStripe\ORM\PaginatedList;
+use XD\Events\Extensions\HasICSFeed;
 
 /**
  * Class EventsPageController
@@ -11,6 +12,10 @@ use SilverStripe\ORM\PaginatedList;
  */
 class EventsPageController extends PageController
 {
+    private static $extensions = [
+        HasICSFeed::class
+    ];
+
     public function PaginatedList()
     {
         $events = $this->getUpcomingEvents();
