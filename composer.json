@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "silverstripe/cms": "^4.0",
+    "silverstripe/cms": "^4 || ^5",
     "silverstripe/lumberjack": "^2.0",
     "symbiote/silverstripe-gridfieldextensions": "*"
   },
