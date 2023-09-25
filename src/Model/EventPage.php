@@ -111,10 +111,15 @@ class EventPage extends Page
      */
     public function getUpcomingDate()
     {
+        return $this->getUpcomingDates()->first();
+    }
+
+    public function getUpcomingDates()
+    {
         return EventDateTime::get()->filter([
-            'EventID' => $this->ID,
+            'EventID' => $this->owner->ID,
             'StartDate:GreaterThanOrEqual' => DBDatetime::now()->getValue()
-        ])->first();
+        ]);
     }
 
     public function getUpcomingStartDate()
