@@ -13,6 +13,7 @@ use SilverStripe\Forms\TimeField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Security\Permission;
 
 /**
  * Class EventDateTime
