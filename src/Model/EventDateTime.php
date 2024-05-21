@@ -167,25 +167,25 @@ class EventDateTime extends DataObject
 
     public function canView($member = null)
     {
-        if (parent::canView($member)) return true;
+        if (!parent::canView($member)) return false;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
 
     public function canEdit($member = null)
     {
-        if (parent::canEdit($member)) return true;
+        if (!parent::canEdit($member)) return false;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
 
     public function canDelete($member = null)
     {
-        if (parent::canDelete($member)) return true;
+        if (!parent::canDelete($member)) return false;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
 
     public function canCreate($member = null, $context = [])
     {
-        if (parent::canCreate($member, $context)) return true;
+        if (!parent::canCreate($member, $context)) return false;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
     
