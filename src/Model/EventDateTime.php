@@ -165,35 +165,26 @@ class EventDateTime extends DataObject
         return date_default_timezone_get();
     }
 
-    public function canView($member = null)
     {
-        if( $event = $this->Event() ){
-            return $event->canView($member);
-        }
+        if (parent::canView($member)) return true;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
 
     public function canEdit($member = null)
     {
-        if( $event = $this->Event() ){
-            return $event->canEdit($member);
-        }
+        if (parent::canEdit($member)) return true;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
 
     public function canDelete($member = null)
     {
-        if( $event = $this->Event() ){
-            return $event->canDelete($member);
-        }
+        if (parent::canDelete($member)) return true;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
 
     public function canCreate($member = null, $context = [])
     {
-        if( $event = $this->Event() ){
-            return $event->canCreate($member, $context);
-        }
+        if (parent::canCreate($member, $context)) return true;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
     
