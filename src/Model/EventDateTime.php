@@ -165,6 +165,7 @@ class EventDateTime extends DataObject
         return date_default_timezone_get();
     }
 
+    public function canView($member = null)
     {
         if (parent::canView($member)) return true;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
