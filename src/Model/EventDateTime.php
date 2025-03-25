@@ -68,7 +68,7 @@ class EventDateTime extends DataObject
             'field' => DateField::class,
             'filter' => 'LessThanOrEqualFilter',
             'match_any' => [
-                'Startdatum',
+                'StartDate',
                 'EndDate'
             ]
         ]
