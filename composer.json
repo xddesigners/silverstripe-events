@@ -1,28 +1,35 @@
 {
-  "name": "xddesigners/silverstripe-events",
-  "description": "Simple events calendar module for SilverStripe",
-  "type": "silverstripe-vendormodule",
-  "keywords": ["silverstripe", "event", "calendar"],
-  "license": "BSD-3-Clause",
-  "authors": [
-    {
-      "name": "Bram de Leeuw",
-      "email": "bram@xd.nl"
+    "name": "xddesigners/silverstripe-events",
+    "description": "Simple events calendar module for SilverStripe",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "event",
+        "calendar"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Remy Vaartjes",
+            "email": "remyxd.nl"
+        },
+        {
+            "name": "Bram de Leeuw"
+        }
+    ],
+    "require": {
+        "silverstripe/cms": "^6",
+        "silverstripe/lumberjack": "*",
+        "symbiote/silverstripe-gridfieldextensions": "*"
+    },
+    "extra": {
+        "expose": [
+            "client/images"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "XD\\Events\\": "src"
+        }
     }
-  ],
-  "require": {
-    "silverstripe/cms": "^4 || ^5",
-    "silverstripe/lumberjack": "*",
-    "symbiote/silverstripe-gridfieldextensions": "*"
-  },
-  "extra": {
-    "expose": [
-      "client/images"
-    ]
-  },
-  "autoload": {
-    "psr-4": {
-      "XD\\Events\\": "src"
-    }
-  }
 }

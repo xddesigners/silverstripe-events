@@ -5,6 +5,7 @@ namespace XD\Events\Model;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DatetimeField;
@@ -99,7 +100,7 @@ class EventDateTime extends DataObject
         return parent::getCMSFields();
     }
 
-    public function validate()
+    public function validate(): ValidationResult
     {
         $result = parent::validate();
         if ($result->isValid() && empty($this->StartDate)) {
@@ -115,7 +116,7 @@ class EventDateTime extends DataObject
         if ($event = $this->Event()) {
             $eventTitle = $event->getTitle();
         }
-        
+
         if ($this->EndDate) {
             $startDate = $this->dbObject('StartDate')->Format('d MMM');
             $endDate = $this->dbObject('EndDate')->Nice();
@@ -188,5 +189,5 @@ class EventDateTime extends DataObject
         if (parent::canCreate($member, $context)) return true;
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
-    
+
 }

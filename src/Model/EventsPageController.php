@@ -3,7 +3,7 @@
 namespace XD\Events\Model;
 
 use PageController;
-use SilverStripe\ORM\PaginatedList;
+use SilverStripe\Model\List\PaginatedList;
 use XD\Events\Extensions\HasICSFeed;
 
 /**

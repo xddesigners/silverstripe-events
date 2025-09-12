@@ -70,7 +70,11 @@ class EventPage extends Page
 
     public function getCMSFields()
     {
+
+
         $this->beforeUpdateCMSFields(function ($fields) {
+
+            $fields->removeByName(['Summary','DateTimes']);
 
             $summary = HtmlEditorField::create('Summary', false);
             $summary->setRows(5);
