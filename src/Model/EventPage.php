@@ -66,7 +66,7 @@ class EventPage extends Page
 
     private static $allowed_children = [];
 
-    private static $icon = 'xddesigners/silverstripe-events:client/images/calendar-event.svg';
+    private static $cms_icon_class = 'font-icon-p-event-alt';
 
     public function getCMSFields()
     {
