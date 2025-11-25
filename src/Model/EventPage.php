@@ -29,7 +29,7 @@ class EventPage extends Page
     private static $table_name = 'EventPage';
 
     private static $db = [
-        'Summary' => 'Text'
+        'Summary' => 'HTMLText'
     ];
 
     private static $default_sort = "Created DESC";
