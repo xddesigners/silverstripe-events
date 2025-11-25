@@ -77,7 +77,7 @@ class EventPage extends Page
 
             $fields->removeByName(['Summary','DateTimes']);
 
-            $summary = TextareaField::create('Summary', false);
+            $summary = HTMLEditorField::create('Summary', false);
             $summary->setRows(5);
             $summary->setDescription(_t(
                 __CLASS__ . '.SummaryDescription',
