@@ -25,7 +25,10 @@
     "extra": {
         "expose": [
             "client/images"
-        ]
+        ],
+        "branch-alias": {
+            "dev-main": "6.x-dev"
+        }
     },
     "autoload": {
         "psr-4": {

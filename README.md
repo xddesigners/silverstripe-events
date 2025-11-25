@@ -1,4 +1,4 @@
-# Simple events calendar for SilverStripe 4 
+# Simple events calendar for SilverStripe
 
 This module provides an EventsPage where you can add Events to. 
 An event can have multiple dates so the same event can occur in your list at multiple dates.

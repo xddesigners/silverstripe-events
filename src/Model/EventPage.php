@@ -8,6 +8,7 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
@@ -28,7 +29,7 @@ class EventPage extends Page
     private static $table_name = 'EventPage';
 
     private static $db = [
-        'Summary' => 'HTMLText'
+        'Summary' => 'Text'
     ];
 
     private static $default_sort = "Created DESC";
@@ -76,7 +77,7 @@ class EventPage extends Page
 
             $fields->removeByName(['Summary','DateTimes']);
 
-            $summary = HtmlEditorField::create('Summary', false);
+            $summary = TextareaField::create('Summary', false);
             $summary->setRows(5);
             $summary->setDescription(_t(
                 __CLASS__ . '.SummaryDescription',
