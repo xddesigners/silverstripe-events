@@ -4,7 +4,6 @@ namespace XD\Events\Model;
 
 use Page;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Versioned\Versioned;
 
 /**
@@ -64,4 +63,19 @@ class EventsPage extends Page
 
         return $events;
     }
+
+    public function getPastEvents()
+    {
+        $now = date('Y-m-d');
+        $joinTable = Versioned::get_stage() === Versioned::LIVE ? 'EventPage_Live' : 'EventPage';
+        $events = EventDateTime::get()
+            ->filter(['Event.ParentID' => $this->ID,])
+            ->where("(\"StartDate\" < '$now') OR (\"StartDate\" < '$now' AND \"EndDate\" < '$now')")
+            ->innerJoin($joinTable, "\"$joinTable\".\"ID\" = \"EventDateTime\".\"EventID\"");
+
+        $this->extend('updatePastEvents', $events);
+
+        return $events;
+    }
+
 }
