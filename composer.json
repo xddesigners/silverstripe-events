@@ -20,7 +20,8 @@
     "require": {
         "silverstripe/cms": "^6",
         "silverstripe/lumberjack": "*",
-        "symbiote/silverstripe-gridfieldextensions": "*"
+        "symbiote/silverstripe-gridfieldextensions": "*",
+        "webbuilders-group/silverstripe-gridfield-calendar-view": "dev-master"
     },
     "extra": {
         "expose": [

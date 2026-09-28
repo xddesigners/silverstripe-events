@@ -32,6 +32,55 @@ use SilverStripe\Security\Permission;
  */
 class EventDateTime extends DataObject
 {
+    /**
+     * CMS override that lets the GridField calendar view fill the full available
+     * width/height (the module ships a fixed aspect-ratio box that keeps it narrow).
+     * Injected via Requirements::customCSS() wherever the calendar is shown.
+     */
+    public const CALENDAR_VIEW_CSS = <<<'CSS'
+.ss-gridfield-calendar { padding-bottom: 0 !important; overflow: visible !important; height: auto !important; }
+.ss-gridfield-calendar .calendar-display { position: static !important; width: 100% !important; height: auto !important; }
+CSS;
+
+    /**
+     * FullCalendar mis-measures (renders at size 0, day grid collapses) when it
+     * boots inside a not-yet-visible CMS tab; the module only recomputes size on a
+     * second show (toggling the view). This forces a redraw()/updateSize() the moment
+     * the calendar element becomes visible. Injected via Requirements::customScript().
+     */
+    public const CALENDAR_VIEW_JS = <<<'JS'
+(function ($) {
+    $.entwine('ss', function ($) {
+        $('.ss-gridfield .ss-gridfield-calendar').entwine({
+            VisibilityObserver: null,
+            onmatch: function () {
+                this._super();
+                if (!window.IntersectionObserver) {
+                    return;
+                }
+                var el = this;
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            el.redraw();
+                        }
+                    });
+                }, { threshold: 0.01 });
+                io.observe(this[0]);
+                this.setVisibilityObserver(io);
+            },
+            onunmatch: function () {
+                var io = this.getVisibilityObserver();
+                if (io) {
+                    io.disconnect();
+                }
+                this._super();
+            }
+        });
+    });
+})(jQuery);
+JS;
+
     private static $table_name = 'EventDateTime';
 
     private static $db = [
@@ -164,6 +213,30 @@ class EventDateTime extends DataObject
     public function getTimeZone()
     {
         return date_default_timezone_get();
+    }
+
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        $this->syncEventCalendarRange();
+    }
+
+    protected function onAfterDelete()
+    {
+        parent::onAfterDelete();
+        $this->syncEventCalendarRange();
+    }
+
+    /**
+     * Keep the parent EventPage's CalendarStart/CalendarEnd (used by the calendar
+     * view on the Events tab) in sync whenever an occurrence changes.
+     */
+    protected function syncEventCalendarRange(): void
+    {
+        $event = $this->Event();
+        if ($event && $event->exists()) {
+            $event->refreshCalendarRange();
+        }
     }
 
     public function canView($member = null)

@@ -34,6 +34,37 @@ class EventsPage extends Page
 
     private static $cms_icon_class = 'font-icon-calendar';
 
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+
+        // Add a "Calendar" tab (second, right after Main) with a month calendar of
+        // all date/time occurrences belonging to this holder's events.
+        if (class_exists(GridFieldCalendarView::class)) {
+            $dateTimes = EventDateTime::get()->filter(['Event.ParentID' => $this->ID]);
+
+            $config = GridFieldConfig_RecordEditor::create();
+            // Occurrences belong to a specific EventPage, so don't allow orphan
+            // "add new" from the holder — edit/delete existing ones is fine.
+            $config->removeComponentsByType(GridFieldAddNewButton::class);
+
+            $calendar = GridFieldCalendarView::create('CalendarStart', 'CalendarEnd');
+            $calendar->setTitleField('Title');
+            $calendar->setAllDayField('AllDay');
+            $calendar->setDefaultView('calendar');
+            $calendar->setCustomOptions(['height' => 'auto']); // expand to content (module's fixed box is overridden by CSS below)
+            $config->addComponent($calendar);
+
+            $grid = GridField::create('CalendarView', _t(__CLASS__ . '.CalendarTab', 'Calendar'), $dateTimes, $config);
+
+            $fields->insertAfter('Main', Tab::create('Calendar', _t(__CLASS__ . '.CalendarTab', 'Calendar'), $grid));
+
+            Requirements::customCSS(EventDateTime::CALENDAR_VIEW_CSS, 'xd-events-calendar-fullwidth');
+        }
+
+        return $fields;
+    }
+
     public function getSettingsFields()
     {
         $fields = parent::getSettingsFields();

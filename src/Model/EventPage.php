@@ -10,6 +10,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\ToggleCompositeField;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
 use XD\Events\Form\EventDateTimeGridField;
@@ -29,7 +30,13 @@ class EventPage extends Page
     private static $table_name = 'EventPage';
 
     private static $db = [
-        'Summary' => 'HTMLText'
+        'Summary' => 'HTMLText',
+        // Combined date + time range (first occurrence) so each event page can be
+        // filtered/plotted by the calendar view on the Events tab. Real columns
+        // because the calendar view queries them via the ORM; kept in sync from
+        // the occurrences (see refreshCalendarRange() / EventDateTime).
+        'CalendarStart' => 'Datetime',
+        'CalendarEnd' => 'Datetime'
     ];
 
     private static $default_sort = "Created DESC";
@@ -75,7 +82,9 @@ class EventPage extends Page
 
         $this->beforeUpdateCMSFields(function ($fields) {
 
-            $fields->removeByName(['Summary','DateTimes']);
+            // CalendarStart/CalendarEnd are derived from the occurrences (see
+            // refreshCalendarRange()); keep them out of the CMS.
+            $fields->removeByName(['Summary','DateTimes','CalendarStart','CalendarEnd']);
 
             $summary = HTMLEditorField::create('Summary', false);
             $summary->setRows(5);
@@ -143,5 +152,79 @@ class EventPage extends Page
         }
 
         return _t(__CLASS__ . '.NoStartDates', 'No start date');
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->assignCalendarRange();
+    }
+
+    /**
+     * Set CalendarStart/CalendarEnd (in memory) from the first occurrence so the
+     * event can be plotted/filtered by the Events tab calendar view.
+     */
+    protected function assignCalendarRange(): void
+    {
+        $first = $this->DateTimes()->sort('StartDate ASC, StartTime ASC')->first();
+        if ($first) {
+            $this->CalendarStart = $first->getStartDateTime()->getValue();
+            $this->CalendarEnd = $first->getEndDateTime()->getValue();
+        } else {
+            $this->CalendarStart = null;
+            $this->CalendarEnd = null;
+        }
+    }
+
+    /**
+     * Recompute and persist the calendar range. Called from EventDateTime after an
+     * occurrence is written/deleted (relations save after the parent, so the value
+     * has to be refreshed then). Only writes when something actually changed.
+     */
+    public function refreshCalendarRange(): void
+    {
+        $before = [$this->CalendarStart, $this->CalendarEnd];
+        $this->assignCalendarRange();
+        if ([$this->CalendarStart, $this->CalendarEnd] !== $before) {
+            $this->write();
+        }
+    }
+
+    /**
+     * All-day flag for the calendar item, from the first occurrence. A getter is
+     * fine here because the calendar view reads it as a property, not via the ORM.
+     */
+    public function getCalendarAllDay(): bool
+    {
+        $first = $this->DateTimes()->sort('StartDate ASC, StartTime ASC')->first();
+        return $first ? (bool) $first->AllDay : false;
+    }
+
+    /**
+     * Point the calendar item at this event page's CMS edit link instead of the
+     * default GridField item link (invoked by the calendar view's data feed).
+     */
+    public function updateGridFieldCalendarData(&$data): void
+    {
+        $data['url'] = $this->CMSEditLink();
+    }
+
+    public function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+
+        // Backfill the calendar range for events saved before these columns existed.
+        $count = 0;
+        foreach (EventPage::get()->filter(['CalendarStart' => null]) as $page) {
+            if (!$page->DateTimes()->exists()) {
+                continue;
+            }
+            $page->write();
+            $count++;
+        }
+
+        if ($count > 0) {
+            DB::alteration_message("Backfilled CalendarStart/CalendarEnd on {$count} EventPage(s)", 'changed');
+        }
     }
 }
