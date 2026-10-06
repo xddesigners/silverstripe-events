@@ -166,7 +166,7 @@ class EventPage extends Page
      */
     protected function assignCalendarRange(): void
     {
-        $first = $this->DateTimes()->sort('StartDate ASC, StartTime ASC')->first();
+        $first = $this->DateTimes()->sort(['StartDate' => 'ASC', 'StartTime' => 'ASC'])->first();
         if ($first) {
             $this->CalendarStart = $first->getStartDateTime()->getValue();
             $this->CalendarEnd = $first->getEndDateTime()->getValue();
@@ -196,7 +196,7 @@ class EventPage extends Page
      */
     public function getCalendarAllDay(): bool
     {
-        $first = $this->DateTimes()->sort('StartDate ASC, StartTime ASC')->first();
+        $first = $this->DateTimes()->sort(['StartDate' => 'ASC', 'StartTime' => 'ASC'])->first();
         return $first ? (bool) $first->AllDay : false;
     }
 
