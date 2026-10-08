@@ -102,7 +102,19 @@ class EventDateTime extends DataObject
     public function validate()
     {
         $result = parent::validate();
-        if ($result->isValid() && empty($this->StartDate)) {
+
+        // Events flagged as having no date (attendable-events extension) legitimately have no start date
+        if ($this->hasField('NoDate') && $this->NoDate) {
+            return $result;
+        }
+
+        // StartDate may still be empty at validation time: it is synced from the DayDateTimes rows
+        // in onBeforeWrite(), which runs *after* validation. Accept the record when at least one day
+        // row carries a start date (attendable-events extension).
+        $hasDayDate = $this->hasMethod('DayDateTimes')
+            && $this->DayDateTimes()->exclude('StartDate', null)->exists();
+
+        if ($result->isValid() && empty($this->StartDate) && !$hasDayDate) {
             $result->addError(_t(__CLASS__ . '.StartDateError', 'You need to set a start date'));
         }
 
