@@ -26,6 +26,43 @@ class EventPageController extends PageController
     ];
 
     /**
+     * Strict routing for the date action: only a numeric EventDateTime id and
+     * valid Y-m-d start/end dates are accepted. Anything else returns a 404
+     * instead of silently rendering the event page, which avoids path
+     * manipulation false-positives from scanners appending segments such as
+     * /admin/ or /APIs/ to the date route.
+     *
+     * @param HTTPRequest $request
+     * @return array|\SilverStripe\Control\HTTPResponse
+     */
+    public function date(HTTPRequest $request)
+    {
+        $id = $request->param('ID');
+        if ($id !== null && $id !== '' && !ctype_digit((string) $id)) {
+            return $this->httpError(404);
+        }
+
+        foreach (['StartDate', 'EndDate'] as $param) {
+            $value = $request->param($param);
+            if ($value !== null && $value !== '' && !$this->isValidIsoDate($value)) {
+                return $this->httpError(404);
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    private function isValidIsoDate($value)
+    {
+        $date = \DateTime::createFromFormat('Y-m-d', (string) $value);
+        return $date && $date->format('Y-m-d') === (string) $value;
+    }
+
+    /**
      * @return DataObject|\SilverStripe\ORM\FieldType\DBField|string
      */
     public function getCurrentDate()
